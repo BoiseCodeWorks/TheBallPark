@@ -1,0 +1,77 @@
+fieldheight = 800px;
+fieldwidth = 800px;
+
+setPosition(top = 0, left = 0)
+  top: unit(top, px)
+  left: unit(left, px)
+
+border-radius(val)
+  -webkit-border-radius: val
+  -moz-border-radius: val
+  border-radius: val
+
+field
+  display:block;
+  width: fieldheight;
+  height: fieldwidth;
+  position: relative;
+  background-image: url('/assets/img/baseball-field-clipart-field.jpg');
+  background-size: 100%;
+  background-repeat: no-repeat;
+  text-align:center;
+  color:white;
+  line-height:25px;
+  .on-deck-circle
+    width 75px;
+    height 75px;
+    position: absolute;
+    background-color: red;
+    border-radius(50%);
+    &.team-away
+      setPosition(653, 536)
+  player
+    height:25px;
+    width:25px;
+    transition:all 4s linear;
+    position: absolute;
+    &.team-home
+      background-color:red;
+    &.team-away
+      background-color:blue;
+    border-radius(35%)
+    &.pos-left
+      setPosition(206, 144)
+    &.pos-center
+      setPosition(95, 387)
+    &.pos-right
+      setPosition(206, 622)
+    &.pos-second
+      setPosition(320, 462)
+    &.pos-third
+      setPosition(395, 250)
+    &.pos-pitcher
+      setPosition(431, 387)
+    &.pos-first
+      setPosition(395, 527)
+    &.pos-catcher
+      setPosition(636, 387)
+    &.pos-short
+      setPosition(318, 309)
+//BASES NOW
+    &.base-first
+      setPosition(447, 536)
+    &.base-second
+      setPosition(299, 387)
+    &.base-third
+      setPosition(447, 238)
+    &.base-home
+      setPosition(599, 387)
+//HITTING
+    &.box-left
+      setPosition(599, 358)
+    &.box-right
+      setPosition(599, 415)
+    &.on-deck-home
+      setPosition(653, 238)
+    &.on-deck-away
+      setPosition(653, 536)
