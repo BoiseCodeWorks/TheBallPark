@@ -13,7 +13,7 @@
     //
     var directive = {
       bindToController: true,
-      controller: ControllerController,
+      controller: RosterController,
       controllerAs: 'rc',
       restrict: 'E',
       templateUrl: '/modules/roster/roster.html',
@@ -25,8 +25,12 @@
 
   }
   /* @ngInject */
-  function ControllerController(Positions) {
-    var vm = this;
-    vm.positions = Positions;
+  function RosterController(Positions) {
+
+    this.positions = Positions.map(x => { return { name: x } });
+
+    //this.availablePositions = () => {
+    //positions.filter(x => !x || this.team.players.some(p => p.position === x));
+    //}
   }
 })();
