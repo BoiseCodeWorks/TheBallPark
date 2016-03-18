@@ -4,7 +4,7 @@
   angular.module('app', [])
   .constant('Positions',(function(){
     return [
-      "bench",
+      "",
       "pitcher",
       "catcher",
       "first",
