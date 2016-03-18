@@ -1,5 +1,5 @@
-<div class="row" style="position:relative">
-  <roster class="col-md-2 roster roster-left"></roster>
+<div class="row" style="position:relative" ng-controller="GameController as gc">
+  <roster team="gc.homeTeam" class="col-md-2 roster roster-left"></roster>
   <div class="col-md-8" ng-include="'/modules/field/field.html'"></div>
-  <roster class="col-md-2 roster roster-right"></roster>
+  <roster team="gc.awayTeam" class="col-md-2 roster roster-right"></roster>
 </div>

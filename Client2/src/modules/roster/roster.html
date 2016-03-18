@@ -1,9 +1,9 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    {{vm.team.name}}
+    {{rc.team.name}}
   </div>
   <div class="panel-body">
-    <div ng-repeat="player in vm.team.players">
+    <div ng-repeat="player in rc.team.players">
       <span>#11</span>
       <select ng-model="position" ng-options="pos for pos in vm.positions">
       </select>
