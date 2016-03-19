@@ -1,6 +1,8 @@
 <field>
-  <player class="team-home pos-pitcher">1</player>
-  <player class="team-home pos-first">2</player>
+
+  <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.homeTeam.players">{{player.number}}</player>
+  <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.awayTeam.players">{{player.number}}</player>
+  <!--<player class="team-home pos-first">2</player>
   <player class="team-home pos-second">31</player>
   <player class="team-home pos-third">22</player>
   <player class="team-home pos-short">17</player>
@@ -15,7 +17,7 @@
   <player class="team-away box-left">13</player>
   <player class="team-away box-right">21</player>
   <player class="team-away on-deck-home">28</player>
-  <player class="team-away on-deck-away">52</player>
+  <player class="team-away on-deck-away">52</player>-->
   <on-deck-cicle class="team-away"></on-deck-cicle>
-  <on-deck-cicle class="team-away"></on-deck-cicle>
+  <on-deck-cicle class="team-home"></on-deck-cicle>
 </field>

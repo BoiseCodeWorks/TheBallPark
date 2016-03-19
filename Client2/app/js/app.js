@@ -1,124 +1,126 @@
-(function() {
+'use strict';
+
+(function () {
   'use strict';
 
-  angular.module('app', [])
-  .constant('Positions',(function(){
-    return [
-      "",
-      "pitcher",
-      "catcher",
-      "first",
-      "second",
-      "third",
-      "short",
-      "left",
-      "center",
-      "right",
-    ]
-  })())
+  angular.module('app', ['resources']).constant('Positions', function () {
+    return {
+      bench: { name: "-Bench-", className: "pos-pine" },
+      pitcher: { name: "Pitcher", className: "pos-pitcher" },
+      cather: { name: "Catcher", className: "pos-catcher" },
+      first: { name: "1st", className: "pos-first" },
+      second: { name: "2nd", className: "pos-second" },
+      third: { name: "3rd", className: "pos-third" },
+      short: { name: "Short", className: "pos-short" },
+      left: { name: "Left", className: "pos-left" },
+      center: { name: "Center", className: "pos-center" },
+      right: { name: "Right", className: "pos-right" }
+    };
+  }());
 })();
+'use strict';
 
-(function() {
-  'use strict';
+(function () {
+    'use strict';
 
-  angular
-    .module('app')
-    .controller('FieldController', FieldController);
+    angular.module('app').controller('FieldController', FieldController);
 
-  FieldController.$inject = ['$scope'];
-  function FieldController($scope) {
-    var vm = this;
+    FieldController.$inject = ['$scope'];
+    function FieldController($scope) {
+        var vm = this;
 
+        activate();
 
-    activate();
+        ////////////////
 
-    ////////////////
+        function activate() {}
 
-    function activate() {
+        var ml = 387;
+        var cl = 447;
 
+        var positions = {
+            left: { top: 226, left: 144 },
+            center: { top: 95, left: 387 },
+            right: { top: 226, left: 656 },
+            second: { top: 330, left: 457 },
+            third: { top: 395, left: 250 },
+            pitch: { top: 447, left: 387 },
+            first: { top: 395, left: 515 },
+            catcher: { top: 636, left: 387 }
+        };
+
+        var bases = {
+            first: { top: 447, left: 536 },
+            second: { top: 299, left: 387 },
+            third: { top: 447, left: 238 },
+            home: { top: 599, left: 387 }
+        };
     }
-
-
-    var ml = 387;
-    var cl = 447;
-
-    var positions = {
-      left: { top: 226, left: 144 },
-      center: { top: 95, left: 387 },
-      right: { top: 226, left: 656 },
-      second: { top: 330, left: 457 },
-      third: { top: 395, left: 250 },
-      pitch: { top: 447, left: 387 },
-      first: { top: 395, left: 515 },
-      catcher: { top: 636, left: 387 },
-    }
-
-    var bases = {
-      first: { top: 447, left: 536 },
-      second: { top: 299, left: 387 },
-      third: { top: 447, left: 238 },
-      home: { top: 599, left: 387 },
-    }
-
-  }
 })();
+'use strict';
 
-
-
-
-(function() {
+(function () {
   'use strict';
 
-  angular
-    .module('app')
-    .controller('GameController', GameController);
+  angular.module('app').controller('GameController', GameController);
 
   GameController.$inject = ['Positions'];
   function GameController(Positions) {
-    this.positions = Positions;
+    var _this = this;
+
+    this.game = {
+      id: 1,
+      inning: 4,
+      isTop: false
+    };
+
     this.homeTeam = {
       name: "The Bulls",
-      players: [
-        { number: 2, position: "pitcher" },
-        { number: 11, position: "catcher" },
-        { number: 18, position: "first" },
-        { number: 23, position: "second" },
-        { number: 44, position: "third" },
-        { number: 46, position: "short" },
-        { number: 1, position: "left" },
-        { number: 3, position: "center" },
-        { number: 9, position: "right" },
-        { number: 18, position: "" },
-        { number: 25, position: "" },
-        { number: 53, position: "" },
-      ]
+      runs: 0,
+      players: [],
+      addPlayer: function addPlayer(player) {}
     };
+
     this.awayTeam = {
       name: "The Storm",
-      players: [
-        { number: 8, position: "pitcher" },
-        { number: 7, position: "catcher" },
-        { number: 3, position: "first" },
-        { number: 18, position: "second" },
-        { number: 33, position: "third" },
-        { number: 59, position: "short" },
-        { number: 42, position: "left" },
-        { number: 22, position: "center" },
-        { number: 27, position: "right" },
-        { number: 16, position: "" },
-        { number: 19, position: "" },
-        { number: 34, position: "" },
-      ]
+      runs: 0,
+      players: [],
+      addPlayer: function addPlayer(player) {}
+    };
+
+    var t1 = [8, 7, 3, 18, 33, 59, 42, 22, 27, 16, 19, 34];
+    var t2 = [2, 11, 18, 23, 44, 46, 1, 3, 9, 18, 25, 53];
+
+    this.getPlayerClass = function (player) {
+      var atBat = _this.isTop && player.team === _this.homeTeam;
     };
   }
 })();
-(function() {
+'use strict';
+
+(function () {
+  'use strict';
+
+  angular.module('resources', ['js-data']).config(["DSFirebaseAdapterProvider", function (DSFirebaseAdapterProvider) {
+    DSFirebaseAdapterProvider.defaults.basePath = 'https://bcw-bcc.firebaseio.com/';
+  }]).run(["DS", "DSFirebaseAdapter", function (DS, DSFirebaseAdapter) {
+
+    // the firebase adapter was already registered
+    DS.adapters.firebase === DSFirebaseAdapter;
+
+    // but we want to make it the default
+    DS.registerAdapter('firebase', DSFirebaseAdapter, { default: true });
+  }]).factory('Game', ["DS", function (DS) {
+    return DS.defineResource('Game');
+  }]);
+})();
+'use strict';
+
+(function () {
   'use strict';
 
   RosterController.$inject = ["Positions"];
-  angular
-    .module('app')
-    .directive('roster', Roster);
+  angular.module('app').directive('roster', Roster);
 
   Roster.$inject = [];
   function Roster() {
@@ -137,12 +139,23 @@
       }
     };
     return directive;
-
   }
   /* @ngInject */
   function RosterController(Positions) {
+    var _this = this;
 
-    this.positions = Positions.map(x => { return { name: x } });
+    this.positions = Positions;
+
+    this.updatePosition = function (player) {
+
+      if (player.position !== _this.positions.bench) {
+        _this.team.players.filter(function (x) {
+          return x !== player && x.position == player.position;
+        }).forEach(function (x) {
+          return x.position = _this.positions.bench;
+        });
+      }
+    };
 
     //this.availablePositions = () => {
     //positions.filter(x => !x || this.team.players.some(p => p.position === x));

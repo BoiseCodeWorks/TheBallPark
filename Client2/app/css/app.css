@@ -254,7 +254,7 @@ field .on-deck-circle.team-away {
 field player {
   height: 25px;
   width: 25px;
-  transition: all 4s linear;
+  transition: all 3s linear;
   position: absolute;
   -webkit-border-radius: 35%;
   -moz-border-radius: 35%;
@@ -333,4 +333,7 @@ field player.pos-short {
 .on-deck-away {
   top: 653px;
   left: 536px;
+}
+.inline-block {
+  display: inline-block;
 }

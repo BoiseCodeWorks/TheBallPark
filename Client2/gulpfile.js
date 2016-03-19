@@ -13,6 +13,7 @@ var
   uglify = require('gulp-uglify'),
   filter = require('gulp-filter'),
   stylus = require('gulp-stylus'),
+  babel = require('gulp-babel'),
   browserSync = require('browser-sync').create();
 
 var gulpsync = require('gulp-sync')(gulp);
@@ -110,6 +111,9 @@ gulp.task('html', function() {
 gulp.task('js', function() {
   log('Building scripts..');
   return gulp.src(source.js)
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(concat('app.js'))
     .pipe(ngAnnotate())
     .on('error', handleError)

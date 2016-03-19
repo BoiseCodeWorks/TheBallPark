@@ -4,15 +4,9 @@
   </div>
   <div class="panel-body">
     <div class="list-group">
-      <div ng-repeat="player in rc.team.players" class="list-group-item">
-        <div class="media">
-          <div class="media-left"><span class="media-object">{{player.number}}</span></div>
-          <div class="media-body">
-            <div class="media-heading">
-              <select class="form-control" ng-model="player.position" ng-options="pos.name for pos in rc.positions" ng-change="updatePositions(player)"></select>
-            </div>
-          </div>
-        </div>
+      <div ng-repeat="player in rc.team.players">
+        <span class="inline-block" style="width:30px;">#{{player.number}}</span>
+        <select ng-model="player.position" ng-options="pos as pos.name for pos in rc.positions" ng-change="rc.updatePosition(player)"></select>
       </div>
     </div>
   </div>
