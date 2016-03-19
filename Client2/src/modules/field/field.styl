@@ -1,6 +1,7 @@
 fieldheight = 800px;
 fieldwidth = 800px;
-
+homecolor = red;
+awaycolor = blue;
 setPosition(top = 0, left = 0)
   top: unit(top, px)
   left: unit(left, px)
@@ -21,23 +22,51 @@ field
   text-align:center;
   color:white;
   line-height:25px;
-  .on-deck-circle
+  dugout
+    position:absolute;
+    height: 115px;
+    width: 46px;
+    top: 523px;
+    &.team-home
+      background-color: lighten(homecolor,50%);
+      border: 2px solid homecolor
+      transform: rotate(-45deg);
+      left: 212px;
+    &.team-away
+      background-color: lighten(awaycolor,50%);
+      border: 2px solid awaycolor
+      transform: rotate(45deg);
+      left: 556px;
+  on-deck-circle
     width 75px;
     height 75px;
     position: absolute;
-    background-color: red;
     border-radius(50%);
+    &.team-home
+      background-color: lighten(homecolor,50%);
+      border: 2px solid homecolor
+      setPosition(653, 255)
     &.team-away
-      setPosition(653, 536)
+      background-color: lighten(awaycolor,50%);
+      border: 2px solid awaycolor
+      setPosition(653, 470)
   player
     height:25px;
     width:25px;
     transition:all 3s linear;
     position: absolute;
     &.team-home
-      background-color:red;
+      background-color:homecolor;
+      &.on-deck
+        setPosition(653, 238)
+      &.pos-pine
+        setPosition(574,238)
     &.team-away
-      background-color:blue;
+      background-color:awaycolor;
+      &.on-deck
+        setPosition(653, 536)
+      &.pos-pine
+        setPosition(574,562)
     border-radius(35%)
     &.pos-left
       setPosition(206, 144)
@@ -58,20 +87,23 @@ field
     &.pos-short
       setPosition(318, 309)
 //BASES NOW
-    &.base-first
+    &.at-first
       setPosition(447, 536)
-    &.base-second
+    &.at-second
       setPosition(299, 387)
-    &.base-third
+    &.at-third
       setPosition(447, 238)
-    &.base-home
+    &.at-home
       setPosition(599, 387)
 //HITTING
     &.box-left
       setPosition(599, 358)
     &.box-right
       setPosition(599, 415)
-    &.on-deck-home
-      setPosition(653, 238)
-    &.on-deck-away
-      setPosition(653, 536)
+
+.load-bases 
+  position: absolute;
+  width: auto;
+  bottom: 70px;
+  left: 50%;
+  margin-left: -48px;

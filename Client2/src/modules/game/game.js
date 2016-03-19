@@ -5,36 +5,76 @@
     .module('app')
     .controller('GameController', GameController);
 
-  GameController.$inject = ['Positions'];
-  function GameController(Positions) {
+  function GameController(Positions, Games, Teams, Players) {
+    //Lets just work with the one game we have
+    var gameId = 1;
+    Games.find(gameId).then((data) => {
+      this.game = data;
+      console.dir(data);
+    })
 
-    this.game = {
-      id: 1,
-      inning: 4,
-      isTop: false,
+    Teams.findAll().then((data) => {
+      this.teams = data;
+      console.dir(data);
+    })
+
+    Players.findAll().then((data) => {
+      this.players = data;
+      console.dir(data);
+    })
+
+    this.loadBases = () => {
+      var hp = this.game.homeTeam.players;
+      var ap = this.game.awayTeam.players;
+      hp[0].position = 'atThird';
+      hp[1].position = 'atSecond';
+      hp[2].position = 'atFirst';
+      hp[3].position = 'bench';
+      hp[4].position = 'bench';
+      hp[5].position = 'atBatRight';
+      hp[6].position = 'bench';
+      hp[7].position = 'bench';
+      hp[8].position = 'bench';
+      hp[9].position = 'bench';
+      hp[10].position = 'bench';
+      hp[11].position = 'bench';
+      
+      ap[0].position = 'first';
+      ap[1].position = 'second';
+      ap[2].position = 'third';
+      ap[3].position = 'bench';
+      ap[4].position = 'short';
+      ap[5].position = 'center';
+      ap[6].position = 'right';
+      ap[7].position = 'bench';
+      ap[8].position = 'bench';
+      ap[9].position = 'left';
+      ap[10].position = 'bench';
+      ap[11].position = 'pitcher';
+      
+      
+      Players.saveAll();
     }
-
-    this.homeTeam = {
-      name: "The Bulls",
-      runs: 0,
-      players: [],
-      addPlayer: (player) => {
-      }
-    };
-
-    this.awayTeam = {
-      name: "The Storm",
-      runs: 0,
-      players: [],
-      addPlayer: (player) => {
-      }
-    };
-
-    var t1 = [8, 7, 3, 18, 33, 59, 42, 22, 27, 16, 19, 34];
-    var t2 = [2, 11, 18, 23, 44, 46, 1, 3, 9, 18, 25, 53];
+    
+    this.saveAll = (player) =>{
+      Games.getAll().forEach(x => x.DSSave())
+      Teams.getAll().forEach(x => x.DSSave())
+      Players.getAll().forEach(x => x.DSSave())
+    }
 
     this.getPlayerClass = (player) => {
-      var atBat = this.isTop && player.team === this.homeTeam;
+      var homeClass = player.team === this.game.homeTeam ? 'team-home' : 'team-away';
+
+      //home team always at bat....
+      var posClass = '';
+      if (player.position && Positions[player.position]) {
+        posClass = Positions[player.position].className;
+      } else {
+        posClass = Positions.bench.className;
+      }
+
+      return [homeClass, posClass];
     }
+
   }
 })();

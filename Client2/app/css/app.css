@@ -238,18 +238,43 @@ field {
   color: #fff;
   line-height: 25px;
 }
-field .on-deck-circle {
+field dugout {
+  position: absolute;
+  height: 115px;
+  width: 46px;
+  top: 523px;
+}
+field dugout.team-home {
+  background-color: #ff8080;
+  border: 2px solid #f00;
+  transform: rotate(-45deg);
+  left: 212px;
+}
+field dugout.team-away {
+  background-color: #8080ff;
+  border: 2px solid #00f;
+  transform: rotate(45deg);
+  left: 556px;
+}
+field on-deck-circle {
   width: 75px;
   height: 75px;
   position: absolute;
-  background-color: #f00;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
   border-radius: 50%;
 }
-field .on-deck-circle.team-away {
+field on-deck-circle.team-home {
+  background-color: #ff8080;
+  border: 2px solid #f00;
   top: 653px;
-  left: 536px;
+  left: 255px;
+}
+field on-deck-circle.team-away {
+  background-color: #8080ff;
+  border: 2px solid #00f;
+  top: 653px;
+  left: 470px;
 }
 field player {
   height: 25px;
@@ -263,8 +288,24 @@ field player {
 field player.team-home {
   background-color: #f00;
 }
+field player.team-home.on-deck {
+  top: 653px;
+  left: 238px;
+}
+field player.team-home.pos-pine {
+  top: 574px;
+  left: 238px;
+}
 field player.team-away {
   background-color: #00f;
+}
+field player.team-away.on-deck {
+  top: 653px;
+  left: 536px;
+}
+field player.team-away.pos-pine {
+  top: 574px;
+  left: 562px;
 }
 field player.pos-left {
   top: 206px;
@@ -302,19 +343,19 @@ field player.pos-short {
   top: 318px;
   left: 309px;
 }
-.base-first {
+.at-first {
   top: 447px;
   left: 536px;
 }
-.base-second {
+.at-second {
   top: 299px;
   left: 387px;
 }
-.base-third {
+.at-third {
   top: 447px;
   left: 238px;
 }
-.base-home {
+.at-home {
   top: 599px;
   left: 387px;
 }
@@ -326,13 +367,12 @@ field player.pos-short {
   top: 599px;
   left: 415px;
 }
-.on-deck-home {
-  top: 653px;
-  left: 238px;
-}
-.on-deck-away {
-  top: 653px;
-  left: 536px;
+.load-bases {
+  position: absolute;
+  width: auto;
+  bottom: 70px;
+  left: 50%;
+  margin-left: -48px;
 }
 .inline-block {
   display: inline-block;
