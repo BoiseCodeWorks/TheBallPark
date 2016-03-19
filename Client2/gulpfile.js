@@ -183,6 +183,7 @@ gulp.task('default', gulpsync.sync([
   'clean',
   'vendor',
   'appfiles',
+	'live'
 ]), function() {
 
   log('******************');
