@@ -56,10 +56,14 @@
       Players.saveAll();
     }
     
-    this.saveAll = (player) =>{
+    this.saveAll = () =>{
+      
       Games.getAll().forEach(x => x.DSSave())
       Teams.getAll().forEach(x => x.DSSave())
-      Players.getAll().forEach(x => x.DSSave())
+      Players.getAll().forEach(x => x.DSSave().catch((d) =>{
+        console.dir(d);
+        debugger;
+      }))
     }
 
     this.getPlayerClass = (player) => {

@@ -1,7 +1,6 @@
 <field ng-controller="FieldController as fc">
-
-   <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.game.homeTeam.players">{{player.number}}</player>
-   <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.game.awayTeam.players">{{player.number}}</player>
+   <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.game.homeTeam.players track by player.id">{{player.number}}</player>
+   <player class="" ng-class="gc.getPlayerClass(player)" ng-repeat="player in gc.game.awayTeam.players track by player.id">{{player.number}}</player>
    <!--<player class="team-home pos-first">2</player>
   <player class="team-home pos-second">31</player>
   <player class="team-home pos-third">22</player>

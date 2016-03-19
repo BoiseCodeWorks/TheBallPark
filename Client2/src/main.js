@@ -6,7 +6,7 @@
       return {
         bench: { type: "od", name: "-Bench-", className: "pos-pine" },
         pitcher: { type: "d", name: "Pitcher", className: "pos-pitcher" },
-        cather: { type: "d", name: "Catcher", className: "pos-catcher" },
+        catcher: { type: "d", name: "Catcher", className: "pos-catcher" },
         first: { type: "d", name: "1st", className: "pos-first" },
         second: { type: "d", name: "2nd", className: "pos-second" },
         third: { type: "d", name: "3rd", className: "pos-third" },

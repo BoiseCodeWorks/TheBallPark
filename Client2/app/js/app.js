@@ -7,7 +7,7 @@
     return {
       bench: { type: "od", name: "-Bench-", className: "pos-pine" },
       pitcher: { type: "d", name: "Pitcher", className: "pos-pitcher" },
-      cather: { type: "d", name: "Catcher", className: "pos-catcher" },
+      catcher: { type: "d", name: "Catcher", className: "pos-catcher" },
       first: { type: "d", name: "1st", className: "pos-first" },
       second: { type: "d", name: "2nd", className: "pos-second" },
       third: { type: "d", name: "3rd", className: "pos-third" },
@@ -36,91 +36,6 @@
   function FieldController(Positions) {
     this.getPlayerClass = function (player) {};
   }
-})();
-"use strict";
-
-(function () {
-  'use strict';
-
-  var baseUrl = window.location.hostname === "localhost" ? "http://localhost:63801" : "http://api.boisecodeworks.com/";
-  angular.module('resources', ['js-data']).config(["DSHttpAdapterProvider", "DSFirebaseAdapterProvider", function (DSHttpAdapterProvider, DSFirebaseAdapterProvider) {
-    DSHttpAdapterProvider.defaults.basePath = baseUrl + "/api";
-    DSFirebaseAdapterProvider.defaults.basePath = 'https://bcw-bcc.firebaseio.com/';
-  }]).run(["DS", "DSFirebaseAdapter", function (DS, DSFirebaseAdapter) {
-
-    // the firebase adapter was already registered
-    DS.adapters.firebase === DSFirebaseAdapter;
-    // but we want to make it the default
-    //DS.registerAdapter('firebase', DSFirebaseAdapter, { default: true });
-  }]).factory('Uow', ["Games", "Teams", "Players", function (Games, Teams, Players) {
-    return {
-      Games: Games,
-      Teams: Teams,
-      Players: Players
-    };
-  }]).factory('Games', ["DS", function (DS) {
-    return DS.defineResource({
-      name: 'game',
-      endpoint: 'games',
-      computed: {
-        players: {
-          get: function get() {
-            return [].concat(undefined.homeTeam.players).concat(undefined.awayTeam.players);
-          }
-        }
-      },
-      relations: {
-        hasOne: {
-          team: [{
-            localKey: 'awayTeamId',
-            localField: 'awayTeam'
-          }, {
-            localKey: 'homeTeamId',
-            localField: 'homeTeam'
-          }]
-        }
-      }
-    });
-  }]).factory('Teams', ["DS", function (DS) {
-    return DS.defineResource({
-      name: 'team',
-      endpoint: 'teams',
-      relations: {
-        hasMany: {
-          player: {
-            foreignKey: 'teamId',
-            localField: 'players'
-          }
-        }
-      }
-    });
-  }]).factory('Players', ["DS", function (DS) {
-    var store = DS.defineResource({
-      name: 'player',
-      endpoint: 'players',
-      defaultAdapter: 'firebase',
-      findStrategy: 'fallback',
-      findAllStrategy: 'fallback',
-      fallbackAdapters: ['http'],
-      relations: {
-        hasOne: {
-          team: {
-            localKey: 'teamId',
-            localField: 'team'
-          }
-        }
-      },
-      saveAll: function saveAll() {
-        store.getAll().filter(function (x) {
-          return x.DSHasChanges();
-        }).forEach(function (x) {
-          return x.DSSave();
-        });
-      }
-    });
-
-    return store;
-  }]);
 })();
 'use strict';
 
@@ -182,7 +97,8 @@
       Players.saveAll();
     };
 
-    this.saveAll = function (player) {
+    this.saveAll = function () {
+
       Games.getAll().forEach(function (x) {
         return x.DSSave();
       });
@@ -190,7 +106,10 @@
         return x.DSSave();
       });
       Players.getAll().forEach(function (x) {
-        return x.DSSave();
+        return x.DSSave().catch(function (d) {
+          console.dir(d);
+          debugger;
+        });
       });
     };
 
@@ -208,6 +127,111 @@
       return [homeClass, posClass];
     };
   }
+})();
+"use strict";
+
+(function () {
+  'use strict';
+
+  var baseUrl = window.location.hostname === "localhost" ? "http://localhost:63801" : "http://api.boisecodeworks.com/";
+  angular.module('resources', ['js-data']).config(["DSHttpAdapterProvider", "DSFirebaseAdapterProvider", function (DSHttpAdapterProvider, DSFirebaseAdapterProvider) {
+    DSHttpAdapterProvider.defaults.basePath = baseUrl + "/api";
+    DSFirebaseAdapterProvider.defaults.basePath = 'https://bcw-bcc.firebaseio.com/';
+  }]).run(["DS", "DSHttpAdapter", "DSFirebaseAdapter", "Uow", function (DS, DSHttpAdapter, DSFirebaseAdapter, Uow) {
+    // the firebase adapter was already registered
+    DS.adapters.firebase === DSFirebaseAdapter;
+    // but we want to make it the default
+    DS.registerAdapter('firebase', DSFirebaseAdapter, { default: false });
+
+    // Activate a mostly auto-sync with Firebase
+    // The only thing missing is auto-sync TO Firebase
+    // This will be easier with js-data 2.x, but right
+    // now you still have to do DS.update('user', 1, { foo: 'bar' }), etc.
+    angular.forEach(DS.definitions, function (Resource) {
+      var ref = DSFirebaseAdapter.ref.child(Resource.endpoint);
+      // Inject items into the store when they're added to Firebase
+      // Update items in the store when they're modified in Firebase
+      ref.on('child_changed', function (dataSnapshot) {
+        var data = dataSnapshot.val();
+        if (data[Resource.idAttribute]) {
+          Resource.inject(data);
+        }
+      });
+      // Eject items from the store when they're removed from Firebase
+      ref.on('child_removed', function (dataSnapshot) {
+        var data = dataSnapshot.val();
+        if (data[Resource.idAttribute]) {
+          Resource.eject(data[Resource.idAttribute]);
+        }
+      });
+    });
+  }]).factory('Uow', ["Games", "Teams", "Players", function (Games, Teams, Players) {
+    return {
+      Games: Games,
+      Teams: Teams,
+      Players: Players
+    };
+  }]).factory('Games', ["DS", function (DS) {
+    return DS.defineResource({
+      name: 'game',
+      endpoint: 'games',
+      computed: {
+        players: {
+          get: function get() {
+            return [].concat(undefined.homeTeam.players).concat(undefined.awayTeam.players);
+          }
+        }
+      },
+      relations: {
+        hasOne: {
+          team: [{
+            localKey: 'awayTeamId',
+            localField: 'awayTeam'
+          }, {
+            localKey: 'homeTeamId',
+            localField: 'homeTeam'
+          }]
+        }
+      }
+    });
+  }]).factory('Teams', ["DS", function (DS) {
+    return DS.defineResource({
+      name: 'team',
+      endpoint: 'teams',
+      relations: {
+        hasMany: {
+          player: {
+            foreignKey: 'teamId',
+            localField: 'players'
+          }
+        }
+      }
+
+    });
+  }]).factory('Players', ["DS", function (DS) {
+    var store = DS.defineResource({
+      name: 'player',
+      endpoint: 'players',
+      relations: {
+        belongsTo: {
+          team: {
+            localKey: 'teamId',
+            localField: 'team'
+          }
+        }
+      },
+      //parent: true
+      saveAll: function saveAll() {
+        store.getAll().filter(function (x) {
+          return x.DSHasChanges();
+        }).forEach(function (x) {
+          return x.DSSave();
+        });
+      }
+    });
+
+    return store;
+  }]);
 })();
 'use strict';
 
